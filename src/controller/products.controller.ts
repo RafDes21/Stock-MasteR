@@ -1,59 +1,93 @@
 import { Request, Response } from "express";
+import * as productService from "../services/productServices";
+import products from "models/Products";
 
 
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
-        res.json("");
+        const products = await productService.getAllProducts();
+        res.json(products);
     } catch (error) {
         res.status(500).json({ message: "Error al obtener los productos", error });
     }
 };
 
+
 export const getProductsByCategory = async (req: Request, res: Response) => {
     try {
         const { category } = req.params;
-  
-
-        res.json("products");
+        const products = await productService.getProductsByCategory(category);
+        res.json(products);
     } catch (error) {
         res.status(500).json({ message: "Error al obtener los productos por categoría", error });
     }
 };
 
+
 export const createProduct = async (req: Request, res: Response) => {
     try {
-        const { name, category, description, quantity, date } = req.body;
+        const { name, category, description, price, stock, expirationDate } = req.body;
 
+        const newProduct = new products({
+            name,
+            category,
+            description,
+            price,
+            stock,
+            expirationDate,
+            createdAt: new Date(),
+        });
 
+        const createdProduct = await newProduct.save();
 
-        res.status(201).json("newProduct");
+        res.status(201).json(createdProduct);
     } catch (error) {
         res.status(500).json({ message: "Error al crear el producto", error });
     }
 };
 
-
 export const updateProduct = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-
-        res.json("update");
+      const { id } = req.params;
+      const { name, category, description, price, stock, expirationDate } = req.body;
+  
+      // Actualizar el producto
+      const updatedProduct = await productService.updateProduct(id, {
+        name,
+        category,
+        description,
+        price,
+        stock,
+        expirationDate,
+      });
+  
+      if (!updatedProduct) {
+        return res.status(404).json({ message: "Producto no encontrado" });
+      }
+  
+      res.json(updatedProduct);
     } catch (error) {
-        res.status(500).json({ message: "Error al actualizar el producto", error });
+      res.status(500).json({ message: "Error al actualizar el producto", error });
     }
-};
-
-
-export const deleteProduct = async (req: Request, res: Response) => {
+  };
+  
+  // Eliminar un producto
+  export const deleteProduct = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-
-
-        res.json({ message: "Producto eliminado correctamente" });
+      const { id } = req.params;
+  
+      // Eliminar el producto
+      const deletedProduct = await productService.deleteProduct(id);
+  
+      if (!deletedProduct) {
+        return res.status(404).json({ message: "Producto no encontrado" });
+      }
+  
+      res.json({ message: "Producto eliminado", product: deletedProduct });
     } catch (error) {
-        res.status(500).json({ message: "Error al eliminar el producto", error });
+      res.status(500).json({ message: "Error al eliminar el producto", error });
     }
-};
+  };
 
 // import { Request, Response } from "express";
 // import Product from "../models/Product";
