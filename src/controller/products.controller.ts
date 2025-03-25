@@ -2,12 +2,38 @@ import { Request, Response } from "express";
 import {Product} from "../models/Products";
 
 
-export const getAllProducts = async (req: Request, res: Response) => {
+export const getAllProducts = async (req: Request, res: Response): Promise<any> => {
   try {
-    const clients = await Product.find();  
-    res.status(200).json(clients);
+    const products = await Product.find();
+    
+    if (!products.length) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'No products found',
+        data: null
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Products fetched successfully',
+      data: products
+    });
+
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving Products" });
+    if (error === 'MongoError') {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Database error occurred while retrieving products',
+        data: null
+      });
+    }
+
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error retrieving products',
+      data: null
+    });
   }
 };
 
