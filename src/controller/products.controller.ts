@@ -10,7 +10,7 @@ export const getAllProducts = async (req: Request, res: Response): Promise<any> 
       return res.status(404).json({
         status: 'error',
         message: 'No products found',
-        data: null
+        data: []
       });
     }
 
