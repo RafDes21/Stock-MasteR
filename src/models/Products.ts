@@ -7,7 +7,7 @@ const ProductSchema = new Schema({
   description: { type: String },
   unidad:{type:String},
   url:{type:String},
-  stock: { type: Boolean, required: true, default: 0.0 },
+  stock: { type: Number, required: true, default: 0.0 },
   category: { type: String, required: true },
   expirationDate: { type: String }, 
   createdAt: { type: Date, default: () => new Date().toISOString() },
