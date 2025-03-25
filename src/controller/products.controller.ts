@@ -6,12 +6,11 @@ export const getAllProducts = async (req: Request, res: Response): Promise<any> 
   try {
     const products = await Product.find();
     
-    // Si no hay productos, devolver un array vacío en lugar de null
     if (products.length === 0) {
       return res.status(200).json({
         status: 'success',
         message: 'No products found',
-        data: []  // Devuelve un array vacío
+        data: []  
       });
     }
 
@@ -22,7 +21,6 @@ export const getAllProducts = async (req: Request, res: Response): Promise<any> 
     });
 
   } catch (error) {
-    // Verificar si el error es específico de MongoDB
     if (error === 'MongoError') {
       return res.status(500).json({
         status: 'error',
