@@ -77,7 +77,7 @@ export const updateProduct = async (req: Request, res: Response) => {
   
       try {
         const { id } = req.params;
-        const {  name, category, description, price, stock, expirationDate} = req.body;
+        const {  name, category, description,unit, price, stock, expirationDate} = req.body;
         const updatedProduct = await Product.updateOne(
           { _id: id },
           { $set: {  name, category, description, price, stock, expirationDate } }
