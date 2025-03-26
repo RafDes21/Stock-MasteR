@@ -80,7 +80,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         const {  name, category, description,unit, price, stock, expirationDate} = req.body;
         const updatedProduct = await Product.updateOne(
           { _id: id },
-          { $set: {  name, category, description, price, stock, expirationDate } }
+          { $set: {  name, category, description,unit, price, stock, expirationDate } }
         );
         res.status(200).json({ message: "Producto actualizado exitosamente", product: updatedProduct });
 
